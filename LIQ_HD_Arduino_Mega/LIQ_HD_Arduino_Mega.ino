@@ -184,8 +184,8 @@ bool auto_cal = true;       //flag to turn on daily auto calibration by defaults
 int auto_cal_time = 7;      //hour in the day when auto cal will occur (best in light cycle when animals less active)
 int auto_cal_sec_since_last_lick = 60;  //Time in seconds of inactivity before auto cal will happen
 int bout_cutoff = 3000;     //bout cut off time in milliseconds 
-bool log_by_bout = false;    //flag to turn on "log by bout" mode by default, ONLY ONE SHOULD BE TRUE
-bool log_by_time = true;   //flag to turn on "log by time" mode by default, ONLY ONE SHOULD BE TRUE
+bool log_by_bout = true;    //flag to turn on "log by bout" mode by default, ONLY ONE SHOULD BE TRUE
+bool log_by_time = false;   //flag to turn on "log by time" mode by default, ONLY ONE SHOULD BE TRUE
 
 int lights_on = 6;    //time of day (24hr time) housing lights turn ON
 int lights_off = 18;  //time of day (24hr time) houseing lights turn OFF
