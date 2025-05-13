@@ -170,7 +170,7 @@ void make_file() {
 //==========================================================================================
 
 void make_file_by_bout() {
-  // fetch the time
+ DEBUG_PRINT("MADISON:I ran make_file_by_bout");
   DateTime now;
   now = rtc.now();
 

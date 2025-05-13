@@ -59,7 +59,7 @@
 #include <Fonts/FreeSansBold24pt7b.h>
 
 
-//#define DEBUG //uncomment to turn on debug mode, prints info to Serial Monitor
+#define DEBUG //uncomment to turn on debug mode, prints info to Serial Monitor
 
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
