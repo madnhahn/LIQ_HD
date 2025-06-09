@@ -31,8 +31,9 @@ void resetWire() {
 }
 
 //==========================================================================================
-
+// SHOULD PRINT
 void make_file() {
+  DEBUG_PRINT("Ran -  make_file()");
   // fetch the time
   DateTime now;
   now = rtc.now();
@@ -168,9 +169,9 @@ void make_file() {
 }
 
 //==========================================================================================
-
+// SHOULD PRINT
 void make_file_by_bout() {
- DEBUG_PRINT("MADISON:I ran make_file_by_bout");
+  DEBUG_PRINT("MADISON:I ran make_file_by_bout");
   DateTime now;
   now = rtc.now();
 
@@ -240,8 +241,9 @@ void logging_same_file() {
 }
 
 //======================================================================================
-
+// SHOULD PRINT
 void write_to_file_by_time() {
+  DEBUG_PRINT("Ran -  write_to_file_by_time()");
   // fetch the time
   now = rtc.now();
   uint32_t m = millis();
@@ -374,8 +376,9 @@ void write_to_file_by_time() {
 }
 
 //======================================================================================
-
+// SHOULD PRINT
 void write_to_file_by_bout(int p) {
+  DEBUG_PRINT("Ran -  write_to_file_by_bout()");
   // fetch the time
   int cage_ID;
   now = rtc.now();
@@ -529,8 +532,9 @@ void write_to_file_by_bout(int p) {
 }
 
 //======================================================================================
-
+// SHOULD PRINT
 void write_data() {
+  DEBUG_PRINT("Ran -  write_data()");
   if (SYNC_COUNTER > SYNC_INTERVAL) {
     uint32_t m = millis();
     syncTime = now.minute();

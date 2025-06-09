@@ -1,16 +1,18 @@
 //functions used throughout code
 
 //======================================================================================
-
+// SHOULD PRINT
 void reset_total_LN() {
+  DEBUG_PRINTLN("Ran -  reset_total_LN() ");
   for (int k = 0; k < 36; k++) {
     total_LN[k] = 0;  //reset totals
   }
 }
 
 //======================================================================================
-
+// SHOULD PRINT
 void reset_variables() {
+  DEBUG_PRINTLN("Ran -  reset_variables() ");
   //Reset lick variables
   for (int k = 0; k < 36; k++) {
     LickNumber[k] = 0;
@@ -24,35 +26,36 @@ void reset_variables() {
 }
 
 //==========================================================================================
-
+// SHOULD PRINT
 void Record_Licks() {
-  for (int k = 0; k < 12; k++) {  //for cap sensor 1
+  //DEBUG_PRINT("Ran -  Record_Licks()");
+  for (int k = 0; k < 12; k++) {  //for cap sensor 1 it loops through all 12 sensors on A
     currtouched1 = cap.touched();
-    if ((currtouched1 & _BV(k)) && !licking[k]) {
+    if ((currtouched1 & _BV(k)) && !licking[k]) {   //if the sensor is touched and if the pad is not marked as licking it will log 1 lick
       DEBUG_PRINT(k);
       DEBUG_PRINTLN(" touched");
-      cal_timer = millis();
+      cal_timer = millis(); //Start or update timers
       time_now[k] = millis();
-      licking[k] = true;
+      licking[k] = true; //record as new lick
       LickNumber[k] += 1;
       lick_bout_countdown[k] += 1;
       if (lick_bout_countdown[k] == 1) {
-        bout_start_timer[k] = millis();
+        bout_start_timer[k] = millis(); //one lick means start timer 
       }
-      if (lick_bout_countdown[k] == 3 && millis() - bout_start_timer[k] <= 1000) {
+      if (lick_bout_countdown[k] == 3 && millis() - bout_start_timer[k] <= 1000) { //a bout is 3 licks within 1 second
         BoutNumber[k] += 1;
-        BoutLickNumber[k] += 2;  //add licks missed before bout started
+        BoutLickNumber[k] += 2;  //include first 2 licks in bout total, now that bout is confirmed
         bout_timer[k] = millis();
         in_bout[k] = true;
         DEBUG_PRINT(k);
-        DEBUG_PRINTLN(" bout started!");
+        DEBUG_PRINT(" bout started!");
       }
-      if (in_bout[k]) {  //change this to just if(in_bout && millis() - bout_timer[k] <= 3000)?
+      if (in_bout[k]) {  //change this to just if(in_bout && millis() - bout_timer[k] <= 3000)? this would only count licks if they happen within 3 seconds of the last lick
         BoutLickNumber[k] += 1;
         bout_timer[k] = millis();
       }
     }
-    if (!(currtouched1 & _BV(k)) && licking[k]) {
+    if (!(currtouched1 & _BV(k)) && licking[k]) { //detects lick has ended if it was previously touched but now it is not.
       DEBUG_PRINT(k);
       DEBUG_PRINTLN(" released");
       last_lick_time[k] = millis();
@@ -62,10 +65,10 @@ void Record_Licks() {
       if (in_bout[k] && lick_bout_countdown[k] == 3) {
         BoutLickDuration_bytime[k] = BoutLickDuration[k];
       }
-      if (in_bout[k] && lick_bout_countdown[k] != 3) {
-        BoutLickDuration_bytime[k] = BoutLickDuration_bytime[k] + Elapsedtime[k];
+      if (in_bout[k] && lick_bout_countdown[k] != 3) {  `
+        BoutLickDuration_bytime[k] = BoutLickDuration_bytime[k] + Elapsedtime[k]; //separately track duration of licks in bout time window
       }
-      licking[k] = false;
+      licking[k] = false; //this will reset the licking state to then detect another lick
       DEBUG_PRINTLN(LickNumber[k]);
       DEBUG_PRINTLN(LickDuration[k]);
     }
@@ -92,7 +95,7 @@ void Record_Licks() {
         bout_timer[k] = millis();
         in_bout[k] = true;
         DEBUG_PRINT(k);
-        DEBUG_PRINTLN(" bout started!");
+        DEBUG_PRINT(" bout started!");
       }
       if (in_bout[k]) {  //change this to just if(in_bout && millis() - bout_timer[k] <= 3000)?
         BoutLickNumber[k] += 1;
@@ -164,10 +167,10 @@ void Record_Licks() {
       DEBUG_PRINTLN(LickDuration[k]);
     }
   }
-  lasttouched3 = currtouched3;
+  lasttouched3 = currtouched3; //stores last touch state for the sensors
 
   for (int k = 0; k < 36; k++) {
-    if (lick_bout_countdown[k] <= 2 && millis() - bout_start_timer[k] >= 1000) {
+    if (lick_bout_countdown[k] <= 2 && millis() - bout_start_timer[k] >= 1000) { // if less than 3 licks occurred in 1 second, it is invalid, so it will be cleared.
       bout_start_timer[k] = 0;
       lick_bout_countdown[k] = 0;
       if (log_by_bout) {
@@ -199,8 +202,9 @@ void Record_Licks() {
 }
 
 //======================================================================================
-
+// SHOULD PRINT
 void update_sippers() {
+  DEBUG_PRINT("Ran -  update_sippers() ");
   for (int k = 0; k < 36; k++) {
     if (licking[k]) {
       Elapsedtime[k] = millis() - time_now[k];
