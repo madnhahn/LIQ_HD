@@ -3,7 +3,9 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Adafruit_MPR121.h>
-
+#include <RTClib.h>
+RTC_DS3231 rtc;
+char logFileName[32] = "touchlog.csv"; // name of the log file on the SD card
 // application notes for MPR121
 // https://www.nxp.com/docs/en/application-note/AN3892.pdf
 
@@ -38,7 +40,7 @@ void initialize_variables(){
 }
 
 void logTouchToSD(int sipper_id, unsigned long timestamp, int state) {
-  File dataFile = SD.open("touchlog.txt", FILE_WRITE);
+  File dataFile = SD.open(logFileName, FILE_WRITE);
   if (dataFile) {
     dataFile.print(sipper_id);
     dataFile.print(" , ");
@@ -53,7 +55,7 @@ void logTouchToSD(int sipper_id, unsigned long timestamp, int state) {
     Serial.print(" , ");
     Serial.println(state);
   } else {
-    Serial.println("Error opening touchlog.txt");
+    Serial.println("Error opening log file");
   }
 }
 
@@ -94,12 +96,12 @@ void record() {
 }
 
 void write_SD_headers() {
-    File dataFile = SD.open("touchlog.txt", FILE_WRITE);
+    File dataFile = SD.open(logFileName, FILE_WRITE);
     if (dataFile) {
         dataFile.println("sipper_id , timestamp, state");
         dataFile.close();
     } else {
-        Serial.println("Error opening touchlog.txt");
+        Serial.println("Error opening logFileName");
     }
 }
 
@@ -128,10 +130,16 @@ void set_sensor_settings() {
         caps[sensor].writeRegister(MPR121_FDLT, 1);
     }
 }
-
 void setup() {
   Serial.begin(9600);
   pinMode(button1Pin, INPUT_PULLUP);
+
+  if (!rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    while (1);
+  }
+  DateTime now = rtc.now();
+  snprintf(logFileName, sizeof(logFileName), "%02d%02d%02d.csv", now.year() % 100, now.month(), now.day());
 
   initialize_variables();
   for (int i = 0; i < NUM_SENSORS; i++) {
