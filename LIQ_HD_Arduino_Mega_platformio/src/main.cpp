@@ -9,14 +9,14 @@
 
 /////////////// Settings you might want to change //////////////////
 // Decrease value to increase sensitivity
-int touch_threshold = 2;    //default = 12
-int release_threshold = 0;  //default = 6
-int off_debounce = 50; //time in milliseconds to wait before declaring a lick has stopped (maybe smarter to use sensor's built in debounce? But complicated.)
-int on_debounce = 50; //time in milliseconds to wait before declaring a lick has started
+const int touch_threshold = 120;    //default = 12
+const int release_threshold = 120;  //default = 6
+const int off_debounce = 40; //time in milliseconds to wait before declaring a lick has stopped (maybe smarter to use sensor's built in debounce? But complicated.)
+const int on_debounce = 40; //time in milliseconds to wait before declaring a lick has started
 ///////////////////////////////////////////////////////////
 
 const int button1Pin = 2;
-const int chipSelect = 10;
+const int chipSelect = 7;
 
 const int NUM_SENSORS = 3;
 const int PADS_PER_SENSOR = 12;
@@ -27,36 +27,34 @@ unsigned long lick_start_time[NUM_SENSORS][PADS_PER_SENSOR];
 unsigned long lick_stop_time[NUM_SENSORS][PADS_PER_SENSOR];
 bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
 
-void setup() {
-  Serial.begin(115200);
-  pinMode(button1Pin, INPUT_PULLUP);
-
-  initialize_variables();
-  for (int i = 0; i < NUM_SENSORS; i++) {
-    if (!caps[i].begin(sensorAddresses[i])) {
-      Serial.print("MPR121 #");
-      Serial.print(i + 1);
-      Serial.print(" not found at 0x");
-      Serial.println(sensorAddresses[i], HEX);
-      while (1);
+void initialize_variables(){
+    for (int sensor = 0; sensor < NUM_SENSORS; sensor++) {
+        for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++) {
+            lick_start_time[sensor][pad] = 0;
+            lick_stop_time[sensor][pad] = 0;
+            currently_licking[sensor][pad] = false;
+        }
     }
-  }
-
-  if (!SD.begin(chipSelect)) {
-    Serial.println("SD card initialization failed!");
-    while (1);
-  }
-  write_SD_headers();
-
-  Serial.println("System ready.");
 }
 
-void loop() {
-//   if (digitalRead(button1Pin) == LOW) {
-//     Serial.println("Button 1 pressed. Starting recording...");
-//     delay(300);
-    record();
-//   }
+void logTouchToSD(int sipper_id, unsigned long timestamp, int state) {
+  File dataFile = SD.open("touchlog.txt", FILE_WRITE);
+  if (dataFile) {
+    dataFile.print(sipper_id);
+    dataFile.print(" , ");
+    dataFile.print(timestamp);
+    dataFile.print(" , ");
+    dataFile.println(state);
+    dataFile.close();
+
+    Serial.print(sipper_id);
+    Serial.print(" , ");
+    Serial.print(timestamp);
+    Serial.print(" , ");
+    Serial.println(state);
+  } else {
+    Serial.println("Error opening touchlog.txt");
+  }
 }
 
 void record() {
@@ -105,35 +103,7 @@ void write_SD_headers() {
     }
 }
 
-void logTouchToSD(int sipper_id, unsigned long timestamp, int state) {
-  File dataFile = SD.open("touchlog.txt", FILE_WRITE);
-  if (dataFile) {
-    dataFile.print(sipper_id);
-    dataFile.print(" , ");
-    dataFile.print(timestamp);
-    dataFile.print(" , ");
-    dataFile.println(state);
-    dataFile.close();
 
-    Serial.print(sipper_id);
-    Serial.print(" , ");
-    Serial.print(timestamp);
-    Serial.print(" , ");
-    Serial.println(state);
-  } else {
-    Serial.println("Error opening touchlog.txt");
-  }
-}
-
-void initialize_variables(){
-    for (int sensor = 0; sensor < NUM_SENSORS; sensor++) {
-        for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++) {
-            lick_start_time[sensor][pad] = 0;
-            lick_stop_time[sensor][pad] = 0;
-            currently_licking[sensor][pad] = false;
-        }
-    }
-}
 
 
 void set_sensor_settings() {
@@ -157,4 +127,36 @@ void set_sensor_settings() {
         caps[sensor].writeRegister(MPR121_NCLT, 5);
         caps[sensor].writeRegister(MPR121_FDLT, 1);
     }
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(button1Pin, INPUT_PULLUP);
+
+  initialize_variables();
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    if (!caps[i].begin(sensorAddresses[i])) {
+      Serial.print("MPR121 #");
+      Serial.print(i + 1);
+      Serial.print(" not found at 0x");
+      Serial.println(sensorAddresses[i], HEX);
+      while (1);
+    }
+  }
+
+  if (!SD.begin(chipSelect)) {
+    Serial.println("SD card initialization failed!");
+    while (1);
+  }
+  write_SD_headers();
+
+  Serial.println("System ready.");
+}
+
+void loop() {
+//   if (digitalRead(button1Pin) == LOW) {
+//     Serial.println("Button 1 pressed. Starting recording...");
+//     delay(300);
+    record();
+//   }
 }
