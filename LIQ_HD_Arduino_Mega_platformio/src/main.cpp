@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <SD.h>
+#include <SdFat.h>
 #include <Adafruit_MPR121.h>
 #include <RTClib.h>
-RTC_DS3231 rtc;
+SdFat SD;
+RTC_PCF8523 rtc;
 char logFileName[32] = "touchlog.csv"; // name of the log file on the SD card
 // application notes for MPR121
 // https://www.nxp.com/docs/en/application-note/AN3892.pdf
@@ -17,7 +18,7 @@ const int off_debounce = 40; //time in milliseconds to wait before declaring a l
 const int on_debounce = 40; //time in milliseconds to wait before declaring a lick has started
 ///////////////////////////////////////////////////////////
 
-const int button1Pin = 2;
+const int button1Pin = 48;
 const int chipSelect = 7;
 
 const int NUM_SENSORS = 3;
@@ -130,7 +131,7 @@ void set_sensor_settings() {
         caps[sensor].writeRegister(MPR121_FDLT, 1);
     }
 }
-void setup() {
+ void setup() {
   Serial.begin(9600);
   pinMode(button1Pin, INPUT_PULLUP);
 
@@ -138,8 +139,22 @@ void setup() {
     Serial.println("Couldn't find RTC");
     while (1);
   }
+ // rtc.adjust(DateTime(2025, 6, 11, 14, 01, 0)); // Set to June 11, 2025, 1:00 PM
+  //while(1){
+   // DateTime now = rtc.now();
+   // Serial.print("year: "); Serial.println(now.year());
+   // Serial.print("month: "); Serial.println(now.month());
+    //Serial.print("day: "); Serial.println(now.day());
+   // Serial.print("hour: "); Serial.println(now.hour());
+   // Serial.print("minute: "); Serial.println(now.minute());
+   // Serial.print("second: "); Serial.println(now.second());
+   // Serial.println("Was that the correct time?");
+
+   // delay(60000); // Wait for 60 seconds before checking again
+  //}
+
   DateTime now = rtc.now();
-  snprintf(logFileName, sizeof(logFileName), "%02d%02d%02d.csv", now.year() % 100, now.month(), now.day());
+  snprintf(logFileName, sizeof(logFileName), "%04d%02d%02d_%02d%02d%02d.csv", now.year() % 100, now.month(), now.day(), now.hour(), now.minute(), now.second()); 
 
   initialize_variables();
   for (int i = 0; i < NUM_SENSORS; i++) {
@@ -162,9 +177,10 @@ void setup() {
 }
 
 void loop() {
-//   if (digitalRead(button1Pin) == LOW) {
-//     Serial.println("Button 1 pressed. Starting recording...");
-//     delay(300);
+   if (digitalRead(button1Pin) == LOW) {
+     Serial.println("Button 1 pressed. Starting recording...");
+     delay(300);
     record();
-//   }
+   }
 }
+ 
