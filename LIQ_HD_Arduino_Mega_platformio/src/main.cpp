@@ -30,6 +30,9 @@ unsigned long lick_start_time[NUM_SENSORS][PADS_PER_SENSOR];
 unsigned long lick_stop_time[NUM_SENSORS][PADS_PER_SENSOR];
 bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
 
+unsigned long experiment_start_time = 0;
+bool experiment_started = false;
+
 void initialize_variables(){
     for (int sensor = 0; sensor < NUM_SENSORS; sensor++) {
         for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++) {
@@ -59,19 +62,18 @@ void logTouchToSD(int sipper_id, unsigned long timestamp, int state) {
     Serial.println("Error opening log file");
   }
 }
+// Initialization code moved to setup() or record() function.
 
 void record() {
-    int sipper_id;
-
-DateTime now = rtc.now();
+  int sipper_id;
+  DateTime now = rtc.now();
   snprintf(logFileName, sizeof(logFileName), "%04d%02d%02d_%02d%02d%02d.csv", now.year() % 100, now.month(), now.day(), now.hour(), now.minute(), now.second()); 
-
-
+  experiment_start_time = millis(); //set the experiment start time to the current time
 
     while (true) {
     for (int sensor = 0; sensor < NUM_SENSORS; sensor++) {
       uint16_t touched = caps[sensor].touched(); // bit array with 1s and 0s meaning touched vs. not touched for each of 12 sippers
-      unsigned long now = millis(); // time of recording the touched status
+      unsigned long now = millis() - experiment_start_time; // time of recording the touched status (time in milliseconds since the experiment started).
       for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++) { // loop through each sipper by bitmasking againt shifted 00001
 
         //Goal - Detect the start of a new lick
@@ -81,6 +83,10 @@ DateTime now = rtc.now();
                     currently_licking[sensor][pad] = true; // We are now considered currently licking
                     lick_start_time[sensor][pad] = now; // We save the time this lick started
                     sipper_id = sensor*PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
+                    //set experiment start time at first lick
+                    if (experiment_started) {
+                      experiment_started = true; 
+                    }
                     logTouchToSD(sipper_id, now, 1); // Log the sipper time with state=1, meaning this is lick start
                 }
             }
@@ -154,13 +160,16 @@ void set_sensor_settings() {
    // Serial.print("hour: "); Serial.println(now.hour());
    // Serial.print("minute: "); Serial.println(now.minute());
    // Serial.print("second: "); Serial.println(now.second());
-   // Serial.println("Was that the correct time?");
+ void setup() ;
+  Serial.begin(9600);
+  pinMode(button1Pin, INPUT_PULLUP);
 
-   // delay(60000); // Wait for 60 seconds before checking again
-  //}
+  if (!rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    while (1);
+  }
 
-   
-  initialize_variables(); //MOVE to the start of the record function
+  initialize_variables();
   for (int i = 0; i < NUM_SENSORS; i++) {
     if (!caps[i].begin(sensorAddresses[i])) {
       Serial.print("MPR121 #");
@@ -175,16 +184,7 @@ void set_sensor_settings() {
     Serial.println("SD card initialization failed!");
     while (1);
   }
-  write_SD_headers(); //MOVE to the start of the record function
+  write_SD_headers();
 
   Serial.println("System ready.");
 }
-
-void loop() {
-   if (digitalRead(button1Pin) == LOW) {
-     Serial.println("Button 1 pressed. Starting recording...");
-     delay(300);
-    record();
-   }
-}
- 
