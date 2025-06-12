@@ -62,6 +62,12 @@ void logTouchToSD(int sipper_id, unsigned long timestamp, int state) {
 
 void record() {
     int sipper_id;
+
+DateTime now = rtc.now();
+  snprintf(logFileName, sizeof(logFileName), "%04d%02d%02d_%02d%02d%02d.csv", now.year() % 100, now.month(), now.day(), now.hour(), now.minute(), now.second()); 
+
+
+
     while (true) {
     for (int sensor = 0; sensor < NUM_SENSORS; sensor++) {
       uint16_t touched = caps[sensor].touched(); // bit array with 1s and 0s meaning touched vs. not touched for each of 12 sippers
@@ -153,10 +159,8 @@ void set_sensor_settings() {
    // delay(60000); // Wait for 60 seconds before checking again
   //}
 
-  DateTime now = rtc.now();
-  snprintf(logFileName, sizeof(logFileName), "%04d%02d%02d_%02d%02d%02d.csv", now.year() % 100, now.month(), now.day(), now.hour(), now.minute(), now.second()); 
-
-  initialize_variables();
+   
+  initialize_variables(); //MOVE to the start of the record function
   for (int i = 0; i < NUM_SENSORS; i++) {
     if (!caps[i].begin(sensorAddresses[i])) {
       Serial.print("MPR121 #");
@@ -171,7 +175,7 @@ void set_sensor_settings() {
     Serial.println("SD card initialization failed!");
     while (1);
   }
-  write_SD_headers();
+  write_SD_headers(); //MOVE to the start of the record function
 
   Serial.println("System ready.");
 }
