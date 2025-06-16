@@ -15,7 +15,7 @@ bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
 unsigned long experiment_start_time;
 
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(button1Pin, INPUT_PULLUP);
 
   if (!rtc.begin())

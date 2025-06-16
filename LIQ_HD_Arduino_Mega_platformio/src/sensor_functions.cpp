@@ -20,8 +20,12 @@ void record(){
   snprintf(logFileName, sizeof(logFileName), "%04d%02d%02d_%02d%02d%02d.csv", now.year() % 100, now.month(), now.day(), now.hour(), now.minute(), now.second());
   experiment_start_time = millis(); // set the experiment start time to the current time
   write_SD_headers();               // Write the headers to the SD card file
+
+ unsigned long start_of_timer = millis();
   while (true)
   {
+    Serial.println(millis() - start_of_timer);
+    start_of_timer = millis();
     for (int sensor = 0; sensor < NUM_SENSORS; sensor++)
     {
       uint16_t touched = caps[sensor].touched();            // bit array with 1s and 0s meaning touched vs. not touched for each of 12 sippers
@@ -39,7 +43,7 @@ void record(){
               currently_licking[sensor][pad] = true;      // We are now considered currently licking
               lick_start_time[sensor][pad] = now;         // We save the time this lick started
               sipper_id = sensor * PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
-              logTouchToSD(sipper_id, now, 1);            // Log the sipper time with state=1, meaning this is lick start
+              add_to_queue(sipper_id, now, 1);            // Log the sipper time with state=1, meaning this is lick start
             }
           }
         }
@@ -53,7 +57,7 @@ void record(){
               currently_licking[sensor][pad] = false;     // We are now considered not currently licking
               lick_stop_time[sensor][pad] = now;          // We save the time this lick stopped
               sipper_id = sensor * PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
-              logTouchToSD(sipper_id, now, 0);            // Log the sipper time with state=0, meaning this is lick stop
+              add_to_queue(sipper_id, now, 0);            // Log the sipper time with state=0, meaning this is lick stop
             }
           }
         }
