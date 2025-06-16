@@ -7,5 +7,6 @@
 void record();
 void set_sensor_settings();
 void initialize_variables();
+void print_thresholds();
 
 #endif // SENSOR_FUNCTIONS_H

@@ -87,3 +87,19 @@ void set_sensor_settings(){
     caps[sensor].writeRegister(MPR121_FDLT, 1);
   }
 }
+
+void print_thresholds() {
+    for (int sensor = 0; sensor < NUM_SENSORS; sensor++) {
+        Serial.print("Sensor ");
+        Serial.print(sensor);
+        Serial.println(":");
+        for (int pad = 0; pad < PADS_PER_SENSOR; pad++) {
+            uint8_t reg = 0x41 + pad * 2; // Touch threshold register for electrode N
+            uint8_t threshold = caps[sensor].readRegister8(reg);
+            Serial.print("  Pad ");
+            Serial.print(pad);
+            Serial.print(" threshold: ");
+            Serial.println(threshold);
+        }
+    }
+}

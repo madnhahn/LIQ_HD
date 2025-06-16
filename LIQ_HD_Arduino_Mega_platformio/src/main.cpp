@@ -39,6 +39,8 @@ void setup(){
     }
   }
 
+  set_sensor_settings();
+
   if (!SD.begin(chipSelect))
   {
     Serial.println("SD card initialization failed!");
