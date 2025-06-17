@@ -9,5 +9,7 @@ void set_sensor_settings();
 void initialize_variables();
 void print_thresholds();
 void check_single_sensor(int sensor);
+bool lick_started(bool is_touched, int sensor, int pad, unsigned long now);
+bool lick_stopped(bool is_touched, int sensor, int pad, unsigned long now);
 
 #endif // SENSOR_FUNCTIONS_H
