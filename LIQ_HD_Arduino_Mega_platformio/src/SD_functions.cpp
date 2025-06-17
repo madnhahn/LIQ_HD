@@ -13,16 +13,16 @@ int current_index = 0;
 
 
 void logTouchToSD(int id_list[], unsigned long time_list[], int state_list[]){
-  Serial.println("Logging to SD:");
+  Serial.print("Logging to: "); Serial.println(logFileName);
   File dataFile = SD.open(logFileName, FILE_WRITE);
-  if (dataFile)
-  {
+  if (dataFile){
     for (int i = 0; i < current_index; i++) {
       dataFile.print(id_list[i]);
       dataFile.print(" , ");
       dataFile.print(time_list[i]);
       dataFile.print(" , ");
       dataFile.println(state_list[i]);
+      
 
       // Serial.print(id_list[i]);
       // Serial.print(" , ");
@@ -30,6 +30,7 @@ void logTouchToSD(int id_list[], unsigned long time_list[], int state_list[]){
       // Serial.print(" , ");
       // Serial.println(state_list[i]);
     }
+    dataFile.close();
   }
   else
   {
