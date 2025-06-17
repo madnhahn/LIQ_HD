@@ -63,7 +63,6 @@ void record(){
         }
       }
     }
-    delay(20);
   }
 }
 
