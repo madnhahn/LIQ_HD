@@ -21,11 +21,11 @@ void record(){
   experiment_start_time = millis(); // set the experiment start time to the current time
   write_SD_headers();               // Write the headers to the SD card file
 
- unsigned long start_of_timer = millis();
+//  unsigned long start_of_timer = millis(); //used for timing pulling rate
   while (true)
   {
-    Serial.println(millis() - start_of_timer);
-    start_of_timer = millis();
+    // Serial.println(millis() - start_of_timer); //used for timing pulling rate
+    // start_of_timer = millis(); //used for timing pulling rate
     for (int sensor = 0; sensor < NUM_SENSORS; sensor++)
     {
       uint16_t touched = caps[sensor].touched();            // bit array with 1s and 0s meaning touched vs. not touched for each of 12 sippers
