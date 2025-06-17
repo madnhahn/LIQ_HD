@@ -12,7 +12,7 @@ int current_index = 0;
 
 
 
-void logTouchToSD(int id_list[], unsigned long time_list[], int state_list[]){
+void logTouchToSD(){
   DEBUG_PRINT("Logging to: "); DEBUG_PRINTLN(logFileName);
   File dataFile = SD.open(logFileName, FILE_WRITE);
   if (dataFile){
@@ -31,6 +31,7 @@ void logTouchToSD(int id_list[], unsigned long time_list[], int state_list[]){
       DEBUG_PRINTLN(state_list[i]);
     }
     dataFile.close();
+    current_index = 0; // reset the index to 0 if we reach the end of the list
   }
   else
   {
@@ -47,8 +48,7 @@ void add_to_queue(int sipper_id, unsigned long timestamp, int state){
 
   if (current_index >= list_length)
   {
-    logTouchToSD(id_list, time_list, state_list);
-    current_index = 0; // reset the index to 0 if we reach the end of the list
+    logTouchToSD();
   }
 }
 
