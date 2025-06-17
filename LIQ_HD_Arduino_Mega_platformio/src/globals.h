@@ -10,10 +10,19 @@
 #define on_debounce 40        // time in milliseconds to wait before declaring a lick has started
 #define button1Pin 48
 #define chipSelect 7
+#define DEBUG_PRINT 0
 ///////////////////////////////////////////////////////////
 #include <Adafruit_MPR121.h>
 #include <SdFat.h>
 #include <RTClib.h>
+
+#if DEBUG_PRINT
+  #define DEBUG_PRINTLN(x) Serial.println(x)
+  #define DEBUG_PRINT(x) Serial.print(x)
+#else
+  #define DEBUG_PRINTLN(x)
+  #define DEBUG_PRINT(x)
+#endif
 
 extern SdFat SD;
 extern char logFileName[32]; // name of the log file on the SD card

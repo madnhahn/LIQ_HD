@@ -13,7 +13,7 @@ int current_index = 0;
 
 
 void logTouchToSD(int id_list[], unsigned long time_list[], int state_list[]){
-  Serial.print("Logging to: "); Serial.println(logFileName);
+  DEBUG_PRINT("Logging to: "); DEBUG_PRINTLN(logFileName);
   File dataFile = SD.open(logFileName, FILE_WRITE);
   if (dataFile){
     for (int i = 0; i < current_index; i++) {
@@ -24,17 +24,17 @@ void logTouchToSD(int id_list[], unsigned long time_list[], int state_list[]){
       dataFile.println(state_list[i]);
       
 
-      // Serial.print(id_list[i]);
-      // Serial.print(" , ");
-      // Serial.print(time_list[i]);
-      // Serial.print(" , ");
-      // Serial.println(state_list[i]);
+      DEBUG_PRINT(id_list[i]);
+      DEBUG_PRINT(" , ");
+      DEBUG_PRINT(time_list[i]);
+      DEBUG_PRINT(" , ");
+      DEBUG_PRINTLN(state_list[i]);
     }
     dataFile.close();
   }
   else
   {
-    Serial.println("Error opening log file");
+    DEBUG_PRINTLN("Error opening log file");
   }
 }
 
@@ -61,7 +61,7 @@ void write_SD_headers(){
   }
   else
   {
-    Serial.println("Error opening logFileName");
+    DEBUG_PRINTLN("Error opening logFileName");
   }
 }
 
