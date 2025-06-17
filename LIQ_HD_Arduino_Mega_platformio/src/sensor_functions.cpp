@@ -20,8 +20,7 @@ void record(){
   snprintf(logFileName, sizeof(logFileName), "%04d%02d%02d_%02d%02d%02d.csv", now.year() % 100, now.month(), now.day(), now.hour(), now.minute(), now.second());
   experiment_start_time = millis(); // set the experiment start time to the current time
   write_SD_headers();               // Write the headers to the SD card file
-
-//  unsigned long start_of_timer = millis(); //used for timing pulling rate
+  //  unsigned long start_of_timer = millis(); //used for timing pulling rate
   while (true)
   {
     // Serial.println(millis() - start_of_timer); //used for timing pulling rate
@@ -30,7 +29,9 @@ void record(){
     {
       check_single_sensor(sensor);
     }
+    if(digitalRead(button1Pin) == LOW){break;}
   }
+  logTouchToSD();
 }
 
 void check_single_sensor(int sensor){
