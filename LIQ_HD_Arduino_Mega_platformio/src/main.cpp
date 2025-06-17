@@ -55,5 +55,7 @@ void loop() {
     Serial.println("Button 1 pressed. Starting recording...");
     delay(300);
     record();
+    Serial.println("Button 1 pressed. Stopping recording...");
+    delay(300);
   }
 }
