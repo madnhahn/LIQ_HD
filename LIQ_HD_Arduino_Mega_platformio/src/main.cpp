@@ -54,7 +54,7 @@ void loop() {
   if (digitalRead(button1Pin) == LOW) {
     Serial.println("Button 1 pressed. Starting recording...");
     digitalWrite(LED_PIN, HIGH); //turn LED on
-    delay(300);
+    delay(400);
     record();
     digitalWrite(LED_PIN, LOW); //turn LED off
     Serial.println("Button 1 pressed. Stopping recording...");
