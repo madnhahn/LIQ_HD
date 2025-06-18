@@ -9,6 +9,7 @@
 #define off_debounce 40       // time in milliseconds to wait before declaring a lick has stopped (maybe smarter to use sensor's built in debounce? But complicated.)
 #define on_debounce 40        // time in milliseconds to wait before declaring a lick has started
 #define button1Pin 48
+#define LED_PIN 38
 #define chipSelect 7
 #define DEBUG_PRINT 0
 ///////////////////////////////////////////////////////////

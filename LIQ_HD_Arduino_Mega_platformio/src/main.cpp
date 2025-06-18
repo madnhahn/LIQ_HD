@@ -17,7 +17,7 @@ unsigned long experiment_start_time;
 void setup(){
   Serial.begin(115200);
   pinMode(button1Pin, INPUT_PULLUP);
-
+  pinMode(LED_PIN, OUTPUT);
   if (!rtc.begin())
   {
     Serial.println("Couldn't find RTC");
@@ -53,8 +53,10 @@ void setup(){
 void loop() {
   if (digitalRead(button1Pin) == LOW) {
     Serial.println("Button 1 pressed. Starting recording...");
+    digitalWrite(LED_PIN, HIGH); //turn LED on
     delay(300);
     record();
+    digitalWrite(LED_PIN, LOW); //turn LED off
     Serial.println("Button 1 pressed. Stopping recording...");
     delay(300);
   }
