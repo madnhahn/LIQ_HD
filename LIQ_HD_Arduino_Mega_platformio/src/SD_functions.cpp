@@ -10,7 +10,9 @@ unsigned long time_list[list_length];
 int state_list[list_length];
 int current_index = 0;
 
+// SdFat SD;
 
+// void initialize
 
 void logTouchToSD(){
   DEBUG_PRINT("Logging to: "); DEBUG_PRINTLN(logFileName);

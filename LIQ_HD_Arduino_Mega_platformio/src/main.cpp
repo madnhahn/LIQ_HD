@@ -59,6 +59,7 @@ void loop() {
     Serial.println("Button 1 pressed. Starting recording...");
     digitalWrite(LED_PIN, HIGH); //turn LED on
     delay(400);
+    SD.begin(chipSelect);
     record();
     digitalWrite(LED_PIN, LOW); //turn LED off
     Serial.println("Button 1 pressed. Stopping recording...");
