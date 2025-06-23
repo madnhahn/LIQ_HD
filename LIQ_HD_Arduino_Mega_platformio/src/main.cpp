@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "sensor_functions.h"
 #include "SD_functions.h"
+#include "serial_functions.h"
 
 SdFat SD;
 char logFileName[32] = "lick_data.csv"; // default name of the log file
@@ -13,6 +14,9 @@ unsigned long lick_start_time[NUM_SENSORS][PADS_PER_SENSOR];
 unsigned long lick_stop_time[NUM_SENSORS][PADS_PER_SENSOR];
 bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
 unsigned long experiment_start_time;
+
+int touch_threshold = touch_threshold_default;
+int release_threshold = release_threshold_default;
 
 void setup(){
   Serial.begin(115200);
@@ -60,4 +64,6 @@ void loop() {
     Serial.println("Button 1 pressed. Stopping recording...");
     delay(300);
   }
+
+  setThresholdsFromSerialInput();
 }

@@ -4,8 +4,8 @@
 /////////////// Settings you might want to change //////////////////
 #define NUM_SENSORS 3
 #define PADS_PER_SENSOR 12
-#define touch_threshold 20   // default = 12
-#define release_threshold 10 // default = 6
+#define touch_threshold_default 20   // default = 12
+#define release_threshold_default 10 // default = 6
 #define off_debounce 40       // time in milliseconds to wait before declaring a lick has stopped (maybe smarter to use sensor's built in debounce? But complicated.)
 #define on_debounce 40        // time in milliseconds to wait before declaring a lick has started
 #define button1Pin 48
@@ -33,5 +33,8 @@ extern unsigned long lick_start_time[NUM_SENSORS][PADS_PER_SENSOR];
 extern unsigned long lick_stop_time[NUM_SENSORS][PADS_PER_SENSOR];
 extern bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
 extern unsigned long experiment_start_time;
+
+extern int touch_threshold;
+extern int release_threshold;
 
 #endif // GLOBALS_H
