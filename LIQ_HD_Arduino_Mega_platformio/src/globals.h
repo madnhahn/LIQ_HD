@@ -11,13 +11,13 @@
 #define button1Pin 48
 #define LED_PIN 38
 #define chipSelect 7
-#define DEBUG_PRINT 0
+#define ENABLE_DEBUG 0
 ///////////////////////////////////////////////////////////
 #include <Adafruit_MPR121.h>
 #include <SdFat.h>
 #include <RTClib.h>
 
-#if DEBUG_PRINT
+#if ENABLE_DEBUG
   #define DEBUG_PRINTLN(x) Serial.println(x)
   #define DEBUG_PRINT(x) Serial.print(x)
 #else

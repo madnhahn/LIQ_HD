@@ -55,6 +55,7 @@ void add_to_queue(int sipper_id, unsigned long timestamp, int state){
 }
 
 void write_SD_headers(){
+  DEBUG_PRINT("Writing headers to:"); DEBUG_PRINTLN(logFileName);
   File dataFile = SD.open(logFileName, FILE_WRITE);
   if (dataFile)
   {

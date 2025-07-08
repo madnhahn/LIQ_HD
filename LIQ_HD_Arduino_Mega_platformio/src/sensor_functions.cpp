@@ -3,6 +3,7 @@
 #include "globals.h"
 
 void initialize_variables(){
+  DEBUG_PRINTLN("Setting timers to 0 and currently_licking to false");
   for (int sensor = 0; sensor < NUM_SENSORS; sensor++)
   {
     for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++)
@@ -44,6 +45,7 @@ void check_single_sensor(int sensor){
           currently_licking[sensor][pad] = true;      // We are now considered currently licking
           lick_start_time[sensor][pad] = now;         // We save the time this lick started
           int sipper_id = sensor * PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
+          DEBUG_PRINT("lick start detected on sipper "); DEBUG_PRINT(sipper_id); DEBUG_PRINT(" at "); DEBUG_PRINTLN(now);
           add_to_queue(sipper_id, now, 1); // Log the sipper time with state=1, meaning this is lick start
 
         }
@@ -51,6 +53,7 @@ void check_single_sensor(int sensor){
           currently_licking[sensor][pad] = false;     // We are now considered not currently licking
           lick_stop_time[sensor][pad] = now;          // We save the time this lick stopped
           int sipper_id = sensor * PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
+          DEBUG_PRINT("lick stop detected on sipper ");DEBUG_PRINT(sipper_id); DEBUG_PRINT(" at "); DEBUG_PRINTLN(now);
           add_to_queue(sipper_id, now, 0);            // Log the sipper time with state=0, meaning this is lick stop
         }
       }
