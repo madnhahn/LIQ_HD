@@ -81,25 +81,26 @@ bool lick_stopped(bool is_touched, int sensor, int pad, unsigned long now){
 
 
 void set_sensor_settings(){
-	int debounce = 0; // 0 = turned off. Complicated bit array setting to set the actual range of touched and released (see application notes)      //range 0-7
+	// int debounce = 0; // 0 = turned off. Complicated bit array setting to set the actual range of touched and released (see application notes)      //range 0-7
 	for (int sensor = 0; sensor < NUM_SENSORS; sensor++){
 		caps[sensor].setThresholds(touch_threshold, release_threshold); // set sensitivity of touch and release of capacitive sensors
 		// cap.writeRegister(MPR121_CONFIG1, current);             // default, 16uA charge current
 
-		caps[sensor].writeRegister(MPR121_DEBOUNCE, debounce);
-		caps[sensor].writeRegister(MPR121_MHDR, 1);
-		caps[sensor].writeRegister(MPR121_NHDR, 10);
-		caps[sensor].writeRegister(MPR121_NCLR, 1);
-		caps[sensor].writeRegister(MPR121_FDLR, 2);
+		// See all register meaning and defaults at https://www.nxp.com/docs/en/data-sheet/MPR121.pdf
+		// caps[sensor].writeRegister(MPR121_DEBOUNCE, debounce);
+		// caps[sensor].writeRegister(MPR121_MHDR, 1);  // Max Half Delta Rising
+		// caps[sensor].writeRegister(MPR121_NHDR, 10); // Noise Half Delta Rising
+		// caps[sensor].writeRegister(MPR121_NCLR, 1); // Noise Count Limit Rising
+		// caps[sensor].writeRegister(MPR121_FDLR, 2); // Falling Delta Rising
 
-		caps[sensor].writeRegister(MPR121_MHDF, 1);
-		caps[sensor].writeRegister(MPR121_NHDF, 5);
-		caps[sensor].writeRegister(MPR121_NCLF, 3);
-		caps[sensor].writeRegister(MPR121_FDLF, 1);
+		// caps[sensor].writeRegister(MPR121_MHDF, 1);  // Max Half Delta Falling
+		// caps[sensor].writeRegister(MPR121_NHDF, 5); // Noise Half Delta Falling
+		// caps[sensor].writeRegister(MPR121_NCLF, 3); // Noise Count Limit Falling
+		// caps[sensor].writeRegister(MPR121_FDLF, 1); // Falling Delta Falling
 
-		caps[sensor].writeRegister(MPR121_NHDT, 1);
-		caps[sensor].writeRegister(MPR121_NCLT, 5);
-		caps[sensor].writeRegister(MPR121_FDLT, 1);
+		// caps[sensor].writeRegister(MPR121_NHDT, 1); // Noise Half Delta Touch
+		// caps[sensor].writeRegister(MPR121_NCLT, 5); // Noise Count Limit Touch
+		// caps[sensor].writeRegister(MPR121_FDLT, 1); // Falling Delta Touch
 	}
 }
 
