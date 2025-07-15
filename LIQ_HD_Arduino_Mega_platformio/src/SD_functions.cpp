@@ -4,7 +4,7 @@
 #include <SdFat.h>
 #include "SD_functions.h"
 
-const int list_length = 20;
+const int list_length = 400; // about 3 kb SRAM still free with this length (out of 8 kb)
 int id_list[list_length];
 unsigned long time_list[list_length];
 int state_list[list_length];
