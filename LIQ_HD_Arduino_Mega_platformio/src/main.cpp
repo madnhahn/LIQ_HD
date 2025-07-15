@@ -20,6 +20,7 @@ int release_threshold = release_threshold_default;
 
 void setup(){
 	Serial.begin(115200);
+	Serial.print("Initial free memory: "); Serial.println(freeMemory());
 	pinMode(button1Pin, INPUT_PULLUP);
 	pinMode(LED_PIN, OUTPUT);
 	if (!rtc.begin()) {

@@ -3,4 +3,6 @@
 
 void setThresholdsFromSerialInput();
 
+int freeMemory();
+
 #endif
