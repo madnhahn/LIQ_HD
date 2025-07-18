@@ -2,55 +2,53 @@
 #include "globals.h"
 #include "sensor_functions.h"
 
-static String inputBuffer = "";
 
-bool update_buffer() {
+
+String serial_command() {
 	// updates string buffer
 	// returns true as soon as a newline character is encountered
+	static String inputBuffer = "";
 	while (Serial.available()) {
 		char c = Serial.read();
 		Serial.print(c);
 		if (c == '\n') {
-			return true;
+			String result = inputBuffer;
+			inputBuffer = ""; // Clear buffer for next command
+			return result;
 		}
 		else {
 			inputBuffer += c;
 		}
 	}
-	return false;
+	return ""; // Return empty string if no complete command is available
 }
 
-bool update_thresh_global(Settings settings){
-	inputBuffer.trim();
-	if (inputBuffer.length() < 2) {
+void update_settings(Settings settings, String cmd) {
+	cmd.trim();
+	if (cmd.length() < 2) {
 		Serial.println("Invalid entry: input too short");
-		return false;
+		return;
 	}
 
-	int value = inputBuffer.substring(1).toInt();
-	if (inputBuffer[0] == 't'){
+	int value = cmd.substring(1).toInt();
+	if (cmd[0] == 't'){
 		Serial.print("Set touch threshold to: "); Serial.println(value);
 		settings.touch_threshold = value;
-		return true;
+		return;
 	}
-	else if(inputBuffer[0] == 'r'){
+	else if(cmd[0] == 'r'){
 		Serial.print("Set release threshold to: "); Serial.println(value);
 		settings.release_threshold = value;
-		return true;
+		return;
 	}
 	else {
 		Serial.println("Invalid entry: Must start with 't' or 'r' to set touch or release threshold");
-		return false;
+		return;
 	}
+
 }
 
-void setThresholdsFromSerialInput(Settings settings) {
-	bool line_complete = update_buffer();
-	if (line_complete) {
-		update_thresh_global(settings);
-		inputBuffer = ""; // Clear buffer for next command
-	}
-}
+
 
 
 #ifdef __arm__ // should use uinstd.h to define sbrk but Due causes a conflict

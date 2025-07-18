@@ -25,5 +25,9 @@ void loop() {
 		Serial.println("Button 1 pressed. Stopping recording...");
 		delay(300);
 	}
-	setThresholdsFromSerialInput(settings);
+	// Check for serial commands to update settings
+	String cmd = serial_command();
+	if (cmd.length() > 0){
+		update_settings(settings, cmd);
+	}
 }
