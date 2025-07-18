@@ -5,7 +5,6 @@
 #include "SD_functions.h"
 #include "serial_functions.h"
 
-SdFat SD;
 RTC_PCF8523 rtc;
 Adafruit_MPR121 caps[NUM_SENSORS];
 
@@ -35,10 +34,6 @@ void setup(){
 
 	set_sensor_settings();
 
-	if (!SD.begin(chipSelect)) {
-		Serial.println("SD card initialization failed!");
-		while(1){;}
-	}
 	Serial.println("System ready.");
 }
 
@@ -47,7 +42,6 @@ void loop() {
 		Serial.println("Button 1 pressed. Starting recording...");
 		digitalWrite(LED_PIN, HIGH); //turn LED on
 		delay(400);
-		SD.begin(chipSelect);
 		record();
 		digitalWrite(LED_PIN, LOW); //turn LED off
 		Serial.println("Button 1 pressed. Stopping recording...");

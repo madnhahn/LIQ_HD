@@ -24,7 +24,6 @@
 	#define DEBUG_PRINT(x)
 #endif
 
-extern SdFat SD;
 extern RTC_PCF8523 rtc;
 extern Adafruit_MPR121 caps[NUM_SENSORS];
 

@@ -2,12 +2,11 @@
 #include "sensor_functions.h"
 #include "globals.h"
 
-
-
 void record(){
 	bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR] = {false};
 
-	create_log_file();
+	if (!create_log_file()) { return;}
+
 	unsigned long experiment_start_time = millis(); // set the experiment start time to the current time
 	unsigned long now;
 	while (true) {

@@ -4,6 +4,7 @@
 #include <SdFat.h>
 #include "SD_functions.h"
 
+SdFat SD;
 const int list_length = 400; // about 3 kb SRAM still free with this length (out of 8 kb)
 int id_list[list_length];
 unsigned long time_list[list_length];
@@ -49,7 +50,11 @@ void add_to_queue(int sipper_id, unsigned long timestamp, int state){
 	}
 }
 
-void create_log_file(){
+bool create_log_file(){
+	if (!SD.begin(chipSelect)) {
+		Serial.println("SD card initialization failed!");
+		return false;
+	}
 	DateTime now = rtc.now();
 	snprintf(logFileName, sizeof(logFileName),
 		"licks_%04d%02d%02d_%02d%02d%02d.csv",
@@ -61,9 +66,11 @@ void create_log_file(){
 	if (dataFile) {
 		dataFile.println("sipper_id , timestamp, state");
 		dataFile.close();
+		return true;
 	}
 	else {
 		DEBUG_PRINT("Error creating "); DEBUG_PRINTLN(logFileName);
+		return false;
 	}
 }
 
