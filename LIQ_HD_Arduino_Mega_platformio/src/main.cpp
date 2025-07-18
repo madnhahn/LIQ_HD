@@ -22,8 +22,6 @@ void loop() {
 		delay(400);
 		record(settings);
 		digitalWrite(LED_PIN, LOW); //turn LED off
-		Serial.println("Button 1 pressed. Stopping recording...");
-		delay(300);
 	}
 	// Check for serial commands to update settings
 	String cmd = serial_command();

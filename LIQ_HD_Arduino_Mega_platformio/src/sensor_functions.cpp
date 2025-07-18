@@ -22,7 +22,9 @@ void record(Settings settings){
 			add_to_queue(-1, now, 1);
 		}
 		if(digitalRead(button1Pin) == LOW){
+			Serial.println("Button 1 pressed. Stopping recording...");
 			logTouchToSD();
+			delay(300);
 			break;
 		}
 	}
