@@ -9,7 +9,8 @@
 #define button1Pin 48
 #define LED_PIN 38
 #define chipSelect 7
-#define ENABLE_DEBUG 0
+#define ENABLE_DEBUG false
+#define LOG_LOOP_TIME true
 ///////////////////////////////////////////////////////////
 #include <Adafruit_MPR121.h>
 #include <SdFat.h>
