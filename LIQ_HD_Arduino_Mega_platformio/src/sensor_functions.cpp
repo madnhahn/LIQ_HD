@@ -7,7 +7,7 @@ Adafruit_MPR121 caps[NUM_SENSORS];
 
 void record(Settings settings){
 	bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR] = {false};
-	initialize_sensors(settings);
+	if (!initialize_sensors(settings)) {return;};
 	if (!create_log_file()) {return;}
 
 	unsigned long experiment_start_time = millis(); // set the experiment start time to the current time
@@ -49,14 +49,16 @@ void check_single_sensor(int sensor, unsigned long now, bool currently_licking[P
 	}
 }
 
-void initialize_sensors(Settings settings) {
+bool initialize_sensors(Settings settings) {
 	const uint8_t sensorAddresses[NUM_SENSORS] = {0x5A, 0x5B, 0x5C};
 	for (int i = 0; i < NUM_SENSORS; i++) {
 		if (!caps[i].begin(sensorAddresses[i])) {
 			Serial.print("MPR121 #");Serial.print(i+1);Serial.print(" not found at 0x");Serial.println(sensorAddresses[i], HEX);
+			return false; // If any sensor fails to initialize, return false
 		}
 		caps[i].setThresholds(settings.touch_threshold, settings.release_threshold); // set sensitivity of touch and release of capacitive sensors
 	}
+	return true; // If all sensors initialized successfully, return true
 }
 
 void print_thresholds() {

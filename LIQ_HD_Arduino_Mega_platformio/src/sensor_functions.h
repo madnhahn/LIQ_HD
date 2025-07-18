@@ -12,7 +12,7 @@ struct Settings {
 };
 void record(Settings settings);
 void print_thresholds();
-void initialize_sensors(Settings settings);
+bool initialize_sensors(Settings settings);
 void check_single_sensor(int sensor, unsigned long now, bool currently_licking[PADS_PER_SENSOR]);
 
 #endif // SENSOR_FUNCTIONS_H
