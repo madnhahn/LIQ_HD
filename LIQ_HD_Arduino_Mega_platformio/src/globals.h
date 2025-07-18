@@ -13,8 +13,7 @@
 #define LOG_LOOP_TIME true
 ///////////////////////////////////////////////////////////
 #include <Adafruit_MPR121.h>
-#include <SdFat.h>
-#include <RTClib.h>
+
 
 #if ENABLE_DEBUG
 	#define DEBUG_PRINTLN(x) Serial.println(x)
@@ -24,7 +23,6 @@
 	#define DEBUG_PRINT(x)
 #endif
 
-extern RTC_PCF8523 rtc;
 extern Adafruit_MPR121 caps[NUM_SENSORS];
 
 extern int touch_threshold;

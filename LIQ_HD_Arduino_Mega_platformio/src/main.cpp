@@ -5,7 +5,7 @@
 #include "SD_functions.h"
 #include "serial_functions.h"
 
-RTC_PCF8523 rtc;
+
 Adafruit_MPR121 caps[NUM_SENSORS];
 
 int touch_threshold = touch_threshold_default;
@@ -16,10 +16,6 @@ void setup(){
 	Serial.print("Initial free memory: "); Serial.println(freeMemory());
 	pinMode(button1Pin, INPUT_PULLUP);
 	pinMode(LED_PIN, OUTPUT);
-	if (!rtc.begin()) {
-		Serial.println("Couldn't find RTC");
-		while (1){;}
-	}
 
 	const uint8_t sensorAddresses[NUM_SENSORS] = {0x5A, 0x5B, 0x5C};
 	for (int i = 0; i < NUM_SENSORS; i++) {

@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <SdFat.h>
 #include "SD_functions.h"
+#include <RTClib.h>
+
 
 SdFat SD;
 const int list_length = 400; // about 3 kb SRAM still free with this length (out of 8 kb)
@@ -55,6 +57,13 @@ bool create_log_file(){
 		Serial.println("SD card initialization failed!");
 		return false;
 	}
+
+	RTC_PCF8523 rtc;
+	if (!rtc.begin()) {
+		Serial.println("Couldn't find RTC");
+		return false;
+	}
+
 	DateTime now = rtc.now();
 	snprintf(logFileName, sizeof(logFileName),
 		"licks_%04d%02d%02d_%02d%02d%02d.csv",
