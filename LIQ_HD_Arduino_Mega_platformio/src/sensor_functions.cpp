@@ -19,9 +19,11 @@ void record(){
 			now = millis() - experiment_start_time;
 			add_to_queue(-1, now, 1);
 		}
-		if(digitalRead(button1Pin) == LOW){break;}
+		if(digitalRead(button1Pin) == LOW){
+			logTouchToSD();
+			break;
+		}
 	}
-	logTouchToSD();
 }
 
 void check_single_sensor(int sensor, unsigned long now, bool currently_licking[PADS_PER_SENSOR]) {
