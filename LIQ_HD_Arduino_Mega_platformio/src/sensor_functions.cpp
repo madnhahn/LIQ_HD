@@ -2,26 +2,18 @@
 #include "sensor_functions.h"
 #include "globals.h"
 
-void initialize_variables(){
-	DEBUG_PRINTLN("Setting timers to 0 and currently_licking to false");
-	for (int sensor = 0; sensor < NUM_SENSORS; sensor++)
-	{
-		for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++)
-		{
-			currently_licking[sensor][pad] = false;
-		}
-	}
-}
+
 
 void record(){
-	initialize_variables();
+	bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR] = {false};
+
 	create_log_file();
 	unsigned long experiment_start_time = millis(); // set the experiment start time to the current time
 	unsigned long now;
 	while (true) {
 		for (int sensor = 0; sensor < NUM_SENSORS; sensor++){
 			now = millis() - experiment_start_time;
-			check_single_sensor(sensor, now);
+			check_single_sensor(sensor, now, currently_licking[sensor]);
 		}
 		if (LOG_LOOP_TIME) {
 			now = millis() - experiment_start_time;
@@ -32,22 +24,21 @@ void record(){
 	logTouchToSD();
 }
 
-void check_single_sensor(int sensor, unsigned long now){
+void check_single_sensor(int sensor, unsigned long now, bool currently_licking[PADS_PER_SENSOR]) {
 	uint16_t touched = caps[sensor].touched();            // bit array with 1s and 0s meaning touched vs. not touched for each of 12 sippers
 	for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++) { // loop through each sipper by bitmasking againt shifted 00001
 		bool is_touched = touched & (1 << pad);
-		bool was_licking = currently_licking[sensor][pad];
 		int sipper_id = sensor * PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
 
 		// check if new lick has started
-		if (is_touched && !was_licking) { // If this sipper registers as being touched and is not already mid-lick
-			currently_licking[sensor][pad] = true;      // We are now considered currently licking
+		if (is_touched && !currently_licking[pad]) { // If this sipper registers as being touched and is not already mid-lick
+			currently_licking[pad] = true;      // We are now considered currently licking
 			DEBUG_PRINT("lick start detected on sipper "); DEBUG_PRINT(sipper_id); DEBUG_PRINT(" at "); DEBUG_PRINTLN(now);
 			add_to_queue(sipper_id, now, 1); // Log the sipper time with state=1, meaning this is lick start
 		}
 		// check if current lick has stopped
-		else if (!is_touched && was_licking){ // If was previousluy licking, but is now not touched
-			currently_licking[sensor][pad] = false;     // We are now considered not currently licking
+		else if (!is_touched && currently_licking[pad]){ // If was previousluy licking, but is now not touched
+			currently_licking[pad] = false;     // We are now considered not currently licking
 			DEBUG_PRINT("lick stop detected on sipper ");DEBUG_PRINT(sipper_id); DEBUG_PRINT(" at "); DEBUG_PRINTLN(now);
 			add_to_queue(sipper_id, now, 0);            // Log the sipper time with state=0, meaning this is lick stop
 		}

@@ -27,7 +27,6 @@
 extern SdFat SD;
 extern RTC_PCF8523 rtc;
 extern Adafruit_MPR121 caps[NUM_SENSORS];
-extern bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
 
 extern int touch_threshold;
 extern int release_threshold;

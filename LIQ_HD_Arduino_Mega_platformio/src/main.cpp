@@ -9,8 +9,6 @@ SdFat SD;
 RTC_PCF8523 rtc;
 Adafruit_MPR121 caps[NUM_SENSORS];
 
-bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
-
 int touch_threshold = touch_threshold_default;
 int release_threshold = release_threshold_default;
 
