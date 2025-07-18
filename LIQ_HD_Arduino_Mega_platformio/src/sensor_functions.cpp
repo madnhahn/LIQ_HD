@@ -1,11 +1,14 @@
 #include "SD_functions.h"
 #include "sensor_functions.h"
 #include "globals.h"
+#include <Adafruit_MPR121.h>
 
-void record(){
+Adafruit_MPR121 caps[NUM_SENSORS];
+
+void record(Settings settings){
 	bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR] = {false};
-
-	if (!create_log_file()) { return;}
+	initialize_sensors(settings);
+	if (!create_log_file()) {return;}
 
 	unsigned long experiment_start_time = millis(); // set the experiment start time to the current time
 	unsigned long now;
@@ -46,27 +49,13 @@ void check_single_sensor(int sensor, unsigned long now, bool currently_licking[P
 	}
 }
 
-void set_sensor_settings(){
-	// int debounce = 0; // 0 = turned off. Complicated bit array setting to set the actual range of touched and released (see application notes)      //range 0-7
-	for (int sensor = 0; sensor < NUM_SENSORS; sensor++){
-		caps[sensor].setThresholds(touch_threshold, release_threshold); // set sensitivity of touch and release of capacitive sensors
-		// cap.writeRegister(MPR121_CONFIG1, current);             // default, 16uA charge current
-
-		// See all register meaning and defaults at https://www.nxp.com/docs/en/data-sheet/MPR121.pdf
-		// caps[sensor].writeRegister(MPR121_DEBOUNCE, debounce);
-		// caps[sensor].writeRegister(MPR121_MHDR, 1);  // Max Half Delta Rising
-		// caps[sensor].writeRegister(MPR121_NHDR, 10); // Noise Half Delta Rising
-		// caps[sensor].writeRegister(MPR121_NCLR, 1); // Noise Count Limit Rising
-		// caps[sensor].writeRegister(MPR121_FDLR, 2); // Falling Delta Rising
-
-		// caps[sensor].writeRegister(MPR121_MHDF, 1);  // Max Half Delta Falling
-		// caps[sensor].writeRegister(MPR121_NHDF, 5); // Noise Half Delta Falling
-		// caps[sensor].writeRegister(MPR121_NCLF, 3); // Noise Count Limit Falling
-		// caps[sensor].writeRegister(MPR121_FDLF, 1); // Falling Delta Falling
-
-		// caps[sensor].writeRegister(MPR121_NHDT, 1); // Noise Half Delta Touch
-		// caps[sensor].writeRegister(MPR121_NCLT, 5); // Noise Count Limit Touch
-		// caps[sensor].writeRegister(MPR121_FDLT, 1); // Falling Delta Touch
+void initialize_sensors(Settings settings) {
+	const uint8_t sensorAddresses[NUM_SENSORS] = {0x5A, 0x5B, 0x5C};
+	for (int i = 0; i < NUM_SENSORS; i++) {
+		if (!caps[i].begin(sensorAddresses[i])) {
+			Serial.print("MPR121 #");Serial.print(i+1);Serial.print(" not found at 0x");Serial.println(sensorAddresses[i], HEX);
+		}
+		caps[i].setThresholds(settings.touch_threshold, settings.release_threshold); // set sensitivity of touch and release of capacitive sensors
 	}
 }
 

@@ -12,7 +12,7 @@
 #define ENABLE_DEBUG false
 #define LOG_LOOP_TIME true
 ///////////////////////////////////////////////////////////
-#include <Adafruit_MPR121.h>
+
 
 
 #if ENABLE_DEBUG
@@ -22,10 +22,5 @@
 	#define DEBUG_PRINTLN(x)
 	#define DEBUG_PRINT(x)
 #endif
-
-extern Adafruit_MPR121 caps[NUM_SENSORS];
-
-extern int touch_threshold;
-extern int release_threshold;
 
 #endif // GLOBALS_H	

@@ -20,7 +20,7 @@ bool update_buffer() {
 	return false;
 }
 
-bool update_thresh_global(){
+bool update_thresh_global(Settings settings){
 	inputBuffer.trim();
 	if (inputBuffer.length() < 2) {
 		Serial.println("Invalid entry: input too short");
@@ -30,12 +30,12 @@ bool update_thresh_global(){
 	int value = inputBuffer.substring(1).toInt();
 	if (inputBuffer[0] == 't'){
 		Serial.print("Set touch threshold to: "); Serial.println(value);
-		touch_threshold = value;
+		settings.touch_threshold = value;
 		return true;
 	}
 	else if(inputBuffer[0] == 'r'){
 		Serial.print("Set release threshold to: "); Serial.println(value);
-		release_threshold = value;
+		settings.release_threshold = value;
 		return true;
 	}
 	else {
@@ -44,11 +44,10 @@ bool update_thresh_global(){
 	}
 }
 
-void setThresholdsFromSerialInput() {
+void setThresholdsFromSerialInput(Settings settings) {
 	bool line_complete = update_buffer();
 	if (line_complete) {
-		bool parsed = update_thresh_global();
-		if (parsed) {set_sensor_settings();}
+		update_thresh_global(settings);
 		inputBuffer = ""; // Clear buffer for next command
 	}
 }
