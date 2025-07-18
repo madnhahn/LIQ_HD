@@ -9,8 +9,10 @@
 #define button1Pin 48
 #define LED_PIN 38
 #define chipSelect 7
+#define QUEUE_SIZE 400 // number of entries in the queue before writing to SD card (~3 kb SRAM free with length 400 on Arduino Mega 2560)
 #define ENABLE_DEBUG false
 #define LOG_LOOP_TIME true
+
 ///////////////////////////////////////////////////////////
 
 

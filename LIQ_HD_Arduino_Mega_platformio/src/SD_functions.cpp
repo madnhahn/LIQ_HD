@@ -7,10 +7,9 @@
 
 
 SdFat SD;
-const int list_length = 400; // about 3 kb SRAM still free with this length (out of 8 kb)
-int id_list[list_length];
-unsigned long time_list[list_length];
-int state_list[list_length];
+int id_list[QUEUE_SIZE];
+unsigned long time_list[QUEUE_SIZE];
+int state_list[QUEUE_SIZE];
 int current_index = 0;
 char logFileName[40];
 
@@ -47,7 +46,7 @@ void add_to_queue(int sipper_id, unsigned long timestamp, int state){
 	state_list[current_index] = state;
 	current_index = current_index + 1;
 
-	if (current_index >= list_length){
+	if (current_index >= QUEUE_SIZE){
 		logTouchToSD();
 	}
 }
