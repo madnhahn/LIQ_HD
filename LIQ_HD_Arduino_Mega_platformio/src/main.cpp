@@ -10,8 +10,6 @@ char logFileName[32] = "lick_data.csv"; // default name of the log file
 RTC_PCF8523 rtc;
 Adafruit_MPR121 caps[NUM_SENSORS];
 
-unsigned long lick_start_time[NUM_SENSORS][PADS_PER_SENSOR];
-unsigned long lick_stop_time[NUM_SENSORS][PADS_PER_SENSOR];
 bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];
 unsigned long experiment_start_time;
 
