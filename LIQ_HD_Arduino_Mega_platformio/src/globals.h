@@ -25,7 +25,6 @@
 #endif
 
 extern SdFat SD;
-extern char logFileName[32]; // name of the log file on the SD card
 extern RTC_PCF8523 rtc;
 extern Adafruit_MPR121 caps[NUM_SENSORS];
 extern bool currently_licking[NUM_SENSORS][PADS_PER_SENSOR];

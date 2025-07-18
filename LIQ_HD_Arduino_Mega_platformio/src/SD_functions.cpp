@@ -9,6 +9,8 @@ int id_list[list_length];
 unsigned long time_list[list_length];
 int state_list[list_length];
 int current_index = 0;
+char logFileName[40];
+
 
 void logTouchToSD(){
 	DEBUG_PRINT("Logging to: "); DEBUG_PRINTLN(logFileName);
@@ -47,7 +49,13 @@ void add_to_queue(int sipper_id, unsigned long timestamp, int state){
 	}
 }
 
-void write_SD_headers(){
+void create_log_file(){
+	DateTime now = rtc.now();
+	snprintf(logFileName, sizeof(logFileName),
+		"licks_%04d%02d%02d_%02d%02d%02d.csv",
+		now.year(), now.month(), now.day(),
+		now.hour(), now.minute(), now.second());
+
 	DEBUG_PRINT("Writing headers to:"); DEBUG_PRINTLN(logFileName);
 	File dataFile = SD.open(logFileName, FILE_WRITE);
 	if (dataFile) {
@@ -55,7 +63,7 @@ void write_SD_headers(){
 		dataFile.close();
 	}
 	else {
-		DEBUG_PRINTLN("Error opening logFileName");
+		DEBUG_PRINT("Error creating "); DEBUG_PRINTLN(logFileName);
 	}
 }
 

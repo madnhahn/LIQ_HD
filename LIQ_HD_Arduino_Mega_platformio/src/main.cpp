@@ -6,7 +6,6 @@
 #include "serial_functions.h"
 
 SdFat SD;
-char logFileName[32] = "lick_data.csv"; // default name of the log file
 RTC_PCF8523 rtc;
 Adafruit_MPR121 caps[NUM_SENSORS];
 

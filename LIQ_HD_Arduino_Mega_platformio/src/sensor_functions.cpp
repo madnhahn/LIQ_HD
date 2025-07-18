@@ -15,10 +15,8 @@ void initialize_variables(){
 
 void record(){
 	initialize_variables();
-	DateTime now = rtc.now();
-	snprintf(logFileName, sizeof(logFileName), "licks_%04d%02d%02d_%02d%02d%02d.csv", now.year(), now.month(), now.day(), now.hour(), now.minute(), now.second());
+	create_log_file();
 	experiment_start_time = millis(); // set the experiment start time to the current time
-	write_SD_headers();               // Write the headers to the SD card file
 	while (true) {
 		for (int sensor = 0; sensor < NUM_SENSORS; sensor++){check_single_sensor(sensor);}
 		if (LOG_LOOP_TIME) {
