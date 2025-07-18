@@ -16,11 +16,15 @@ void initialize_variables(){
 void record(){
 	initialize_variables();
 	create_log_file();
-	experiment_start_time = millis(); // set the experiment start time to the current time
+	unsigned long experiment_start_time = millis(); // set the experiment start time to the current time
+	unsigned long now;
 	while (true) {
-		for (int sensor = 0; sensor < NUM_SENSORS; sensor++){check_single_sensor(sensor);}
+		for (int sensor = 0; sensor < NUM_SENSORS; sensor++){
+			now = millis() - experiment_start_time;
+			check_single_sensor(sensor, now);
+		}
 		if (LOG_LOOP_TIME) {
-			unsigned long now = millis() - experiment_start_time;
+			now = millis() - experiment_start_time;
 			add_to_queue(-1, now, 1);
 		}
 		if(digitalRead(button1Pin) == LOW){break;}
@@ -28,9 +32,8 @@ void record(){
 	logTouchToSD();
 }
 
-void check_single_sensor(int sensor){
+void check_single_sensor(int sensor, unsigned long now){
 	uint16_t touched = caps[sensor].touched();            // bit array with 1s and 0s meaning touched vs. not touched for each of 12 sippers
-	unsigned long now = millis() - experiment_start_time; // time of recording the touched status (time in milliseconds since the experiment started).
 	for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++) { // loop through each sipper by bitmasking againt shifted 00001
 		bool is_touched = touched & (1 << pad);
 		bool was_licking = currently_licking[sensor][pad];
