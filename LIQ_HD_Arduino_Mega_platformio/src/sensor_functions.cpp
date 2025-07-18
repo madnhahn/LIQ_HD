@@ -34,7 +34,7 @@ void check_single_sensor(int sensor, unsigned long now, bool currently_licking[P
 	uint16_t touched = caps[sensor].touched();            // bit array with 1s and 0s meaning touched vs. not touched for each of 12 sippers
 	for (uint8_t pad = 0; pad < PADS_PER_SENSOR; pad++) { // loop through each sipper by bitmasking againt shifted 00001
 		bool is_touched = touched & (1 << pad);
-		int sipper_id = sensor * PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
+		signed char sipper_id = sensor * PADS_PER_SENSOR + pad; // Compute the sipper ID counting from 0 to 35 accross the 3 capacitive touch sensors
 
 		// check if new lick has started
 		if (is_touched && !currently_licking[pad]) { // If this sipper registers as being touched and is not already mid-lick

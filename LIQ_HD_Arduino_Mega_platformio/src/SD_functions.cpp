@@ -7,46 +7,31 @@
 
 
 SdFat SD;
-int id_list[QUEUE_SIZE];
-unsigned long time_list[QUEUE_SIZE];
-int state_list[QUEUE_SIZE];
-int current_index = 0;
+Queue queue;
 char logFileName[40];
 
 
 void logTouchToSD(){
 	DEBUG_PRINT("Logging to: "); DEBUG_PRINTLN(logFileName);
 	File dataFile = SD.open(logFileName, FILE_WRITE);
-	if (dataFile){
-		for (int i = 0; i < current_index; i++) {
-			dataFile.print(id_list[i]);
-			dataFile.print(" , ");
-			dataFile.print(time_list[i]);
-			dataFile.print(" , ");
-			dataFile.println(state_list[i]);
-			
-			DEBUG_PRINT(id_list[i]);
-			DEBUG_PRINT(" , ");
-			DEBUG_PRINT(time_list[i]);
-			DEBUG_PRINT(" , ");
-			DEBUG_PRINTLN(state_list[i]);
-		}
-		dataFile.close();
-		current_index = 0; // reset the index to 0 if we reach the end of the list
+	for (unsigned int i = 0; i < queue.i; i++) {
+		dataFile.print(queue.id[queue.i]);
+		dataFile.print(" , ");
+		dataFile.print(queue.time[queue.i]);
+		dataFile.print(" , ");
+		dataFile.println(queue.state[queue.i]);
 	}
-	else {
-		DEBUG_PRINTLN("Error opening log file");
-	}
+	dataFile.close();
+	queue.i = 0; // reset the index to 0 after writing to the file
 }
 
+void add_to_queue(signed char sipper_id, unsigned long timestamp, signed char state){
+	queue.id[queue.i] = sipper_id;
+	queue.time[queue.i] = timestamp;
+	queue.state[queue.i] = state;
+	queue.i += 1;
 
-void add_to_queue(int sipper_id, unsigned long timestamp, int state){
-	id_list[current_index] = sipper_id;
-	time_list[current_index] = timestamp;
-	state_list[current_index] = state;
-	current_index = current_index + 1;
-
-	if (current_index >= QUEUE_SIZE){
+	if (queue.i >= QUEUE_SIZE){
 		logTouchToSD();
 	}
 }
