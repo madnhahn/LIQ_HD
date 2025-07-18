@@ -19,13 +19,13 @@ void record(Settings settings){
 		}
 		if (LOG_LOOP_TIME) {
 			now = millis() - experiment_start_time;
-			add_to_queue(-1, now, 1);
+			log_to_SD(-1, now, 1);
 		}
 		if(digitalRead(button1Pin) == LOW){
 			Serial.println("Button 1 pressed. Stopping recording...");
-			logTouchToSD();
+			close_log_file();
 			delay(300);
-			break;
+			return; // Exit the recording loop
 		}
 	}
 }
@@ -40,13 +40,13 @@ void check_single_sensor(int sensor, unsigned long now, bool currently_licking[P
 		if (is_touched && !currently_licking[pad]) { // If this sipper registers as being touched and is not already mid-lick
 			currently_licking[pad] = true;      // We are now considered currently licking
 			DEBUG_PRINT("lick start detected on sipper "); DEBUG_PRINT(sipper_id); DEBUG_PRINT(" at "); DEBUG_PRINTLN(now);
-			add_to_queue(sipper_id, now, 1); // Log the sipper time with state=1, meaning this is lick start
+			log_to_SD(sipper_id, now, 1); // Log the sipper time with state=1, meaning this is lick start
 		}
 		// check if current lick has stopped
 		else if (!is_touched && currently_licking[pad]){ // If was previousluy licking, but is now not touched
 			currently_licking[pad] = false;     // We are now considered not currently licking
 			DEBUG_PRINT("lick stop detected on sipper ");DEBUG_PRINT(sipper_id); DEBUG_PRINT(" at "); DEBUG_PRINTLN(now);
-			add_to_queue(sipper_id, now, 0);            // Log the sipper time with state=0, meaning this is lick stop
+			log_to_SD(sipper_id, now, 0);            // Log the sipper time with state=0, meaning this is lick stop
 		}
 	}
 }

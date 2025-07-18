@@ -9,9 +9,9 @@
 #define button1Pin 48
 #define LED_PIN 38
 #define chipSelect 7
-#define QUEUE_SIZE 400 // number of entries in the queue before writing to SD card (~3 kb SRAM free with length 400 on Arduino Mega 2560)
+#define MAX_BUFFER_TIME 60000 // max time in milliseconds to wait between writing to SD card
 #define ENABLE_DEBUG false
-#define LOG_LOOP_TIME true
+#define LOG_LOOP_TIME false
 
 ///////////////////////////////////////////////////////////
 
@@ -25,4 +25,4 @@
 	#define DEBUG_PRINT(x)
 #endif
 
-#endif // GLOBALS_H	
+#endif // GLOBALS_H
